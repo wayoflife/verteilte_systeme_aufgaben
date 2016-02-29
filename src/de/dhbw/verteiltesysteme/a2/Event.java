@@ -10,6 +10,16 @@ public class Event implements Serializable{
 	private Date eventDate;
 	private String beschreibung;
 	
+	public Event(String beschreibung) throws RemoteException{
+		setEventDate(new Date());
+		setBeschreibung(beschreibung);
+	}
+	
+	public Event(Date date, String beschreibung) throws RemoteException{
+		setEventDate(date);
+		setBeschreibung(beschreibung);
+	}
+	
 	public Event(long timeFromNow, String beschreibung) throws RemoteException{
 		setEventDate(new Date(new Date().getTime() + timeFromNow));
 		setBeschreibung(beschreibung);

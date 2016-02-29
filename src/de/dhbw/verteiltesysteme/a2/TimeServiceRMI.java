@@ -43,10 +43,12 @@ public class TimeServiceRMI extends UnicastRemoteObject implements TimeService{
 		return new Date();
 	}
 	
-	public void addEvent(Event event) {
-		events.add(event);
-		events.sort(eventComparator());
-		eventThread.interrupt();
+	public void addEvent(Event event) throws RemoteException{
+		if(null != event){
+			events.add(event);
+			events.sort(eventComparator());
+			eventThread.interrupt();
+		}
 	}
 	
 	public Vector<Event> getAllEvents() {
@@ -56,12 +58,12 @@ public class TimeServiceRMI extends UnicastRemoteObject implements TimeService{
 	public Event getNextEvent(){
 		try {
 			return getFutureEvents().firstElement();
-		} catch (NoSuchElementException e){
+		} catch (NoSuchElementException | RemoteException e){
 			return null;
 		}
 	}
 
-	public Vector<Event> getFutureEvents() {
+	public Vector<Event> getFutureEvents() throws RemoteException{
 		Vector<Event> futureEvents = new Vector<Event>();
 		futureEvents.addAll(events);
 		futureEvents.removeIf(futureFilter());
@@ -92,11 +94,8 @@ public class TimeServiceRMI extends UnicastRemoteObject implements TimeService{
 		Predicate<Event> filter = new Predicate<Event>() {
 
 			@Override
-			public boolean test(Event t) {
-				if(t.getEventDate().after(new Date())){
-					return false;
-				} 
-				return true;
+			public boolean test(Event event) {
+				return new Date().after(event.getEventDate());
 			}
 		};
 		return filter;
