@@ -9,8 +9,9 @@ public class Application {
 		Registry registry = LocateRegistry.createRegistry(1099);//1099 ist default
 		TimeServiceRMI timeServiceRMI = new TimeServiceRMI();
 		registry.bind("TimeService", timeServiceRMI);
-		System.out.println("RMI started on port 1099");		
+		System.out.println("Time Service RMI started on port 1099");		
 		
+		/*//Das hier gehört alles in die Tests
 		TimeServiceRMIClient client = new TimeServiceRMIClient();
 		client.printTimeAndDate();
 		
@@ -25,6 +26,7 @@ public class Application {
 		
 		timeServiceRMI.addEvent(new Event(2000, "erstes event nach pause"));
 		System.out.println("letztes event hinzugefügt");
+		*/
 	}
 
 }

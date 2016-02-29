@@ -48,6 +48,7 @@ public class TimeServiceRMI extends UnicastRemoteObject implements TimeService{
 			events.add(event);
 			events.sort(eventComparator());
 			eventThread.interrupt();
+			System.out.println("event has been registered");
 		}
 	}
 	
@@ -73,11 +74,13 @@ public class TimeServiceRMI extends UnicastRemoteObject implements TimeService{
 	@Override
 	public void addEventListener(EventListener listener){
 		eventlisteners.add(listener);
+		System.out.println("eventlistener has been registered");
 	}
 	
 	@Override
 	public void removeEventListener(EventListener listener){
 		eventlisteners.remove(listener);
+		System.out.println("eventlistener has been removed");
 	}
 
 	private Comparator<Event> eventComparator() {
@@ -112,13 +115,13 @@ public class TimeServiceRMI extends UnicastRemoteObject implements TimeService{
 						if(null == nextEvent){ wait();}
 						long sleepTime = nextEvent.getEventDate().getTime() - new Date().getTime();
 						Thread.sleep(sleepTime);
-						
+						System.out.println("event has fired");
 						for(EventListener listener : eventlisteners){
 							try {
 								listener.handleEvent(nextEvent);
 							} catch (RemoteException e) {
-								System.out.println("listener konnte nicht erreicht werden");
-								e.printStackTrace();
+								System.out.println("listener konnte nicht erreicht werden und wird entfernt");
+								removeEventListener(listener);
 							}
 						}
 					} catch (InterruptedException e) {

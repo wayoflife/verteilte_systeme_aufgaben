@@ -40,4 +40,9 @@ public class Event implements Serializable{
 	public void setBeschreibung(String beschreibung) {
 		this.beschreibung = beschreibung;
 	}
+	
+	public void printInfo(){
+		System.out.println("Zeitpunkt: " + eventDate.toString() + "\n"
+				+ "Beschreibung: " + beschreibung);
+	}
 }
