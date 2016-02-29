@@ -1,6 +1,9 @@
 package de.dhbw.verteiltesysteme.a2;
 
-public interface EventListener {
+import java.rmi.Remote;
+import java.rmi.RemoteException;
 
-	public abstract void handleEvent(Event event);
+public interface EventListener extends Remote{
+
+	public abstract void handleEvent(Event event) throws RemoteException;
 }

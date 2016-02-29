@@ -14,6 +14,17 @@ public class Application {
 		TimeServiceRMIClient client = new TimeServiceRMIClient();
 		client.printTimeAndDate();
 		
+		timeServiceRMI.addEvent(new Event(2000, "erstes event"));
+		timeServiceRMI.addEvent(new Event(3000, "zweites event"));
+		timeServiceRMI.addEvent(new Event(5000, "drittes event"));
+		timeServiceRMI.addEvent(new Event(6000, "viertes event"));
+		timeServiceRMI.addEvent(new Event(8000, "fünftes event"));
+		
+		System.out.println("application wartet für 12 sekunden");
+		Thread.sleep(12000);
+		
+		timeServiceRMI.addEvent(new Event(2000, "erstes event nach pause"));
+		System.out.println("letztes event hinzugefügt");
 	}
 
 }

@@ -44,14 +44,9 @@ public class TimeServiceRMI extends UnicastRemoteObject implements TimeService{
 	}
 	
 	public void addEvent(Event event) {
-		try {
-			eventThread.wait();
-			events.add(event);
-			events.sort(eventComparator());
-			eventThread.notify();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		events.add(event);
+		events.sort(eventComparator());
+		eventThread.interrupt();
 	}
 	
 	public Vector<Event> getAllEvents() {
@@ -60,7 +55,7 @@ public class TimeServiceRMI extends UnicastRemoteObject implements TimeService{
 	
 	public Event getNextEvent(){
 		try {
-			return events.firstElement();
+			return getFutureEvents().firstElement();
 		} catch (NoSuchElementException e){
 			return null;
 		}
@@ -72,11 +67,13 @@ public class TimeServiceRMI extends UnicastRemoteObject implements TimeService{
 		futureEvents.removeIf(futureFilter());
 		return futureEvents;
 	}
-	
+
+	@Override
 	public void addEventListener(EventListener listener){
 		eventlisteners.add(listener);
 	}
 	
+	@Override
 	public void removeEventListener(EventListener listener){
 		eventlisteners.remove(listener);
 	}
@@ -97,11 +94,10 @@ public class TimeServiceRMI extends UnicastRemoteObject implements TimeService{
 			@Override
 			public boolean test(Event t) {
 				if(t.getEventDate().after(new Date())){
-					return true;
+					return false;
 				} 
-				return false;
+				return true;
 			}
-			
 		};
 		return filter;
 	}
@@ -110,23 +106,23 @@ public class TimeServiceRMI extends UnicastRemoteObject implements TimeService{
 		return new Thread(new Runnable() {
 			
 			@Override
-			public void run() {
+			public synchronized void run() {
 				while(true){
-					long sleepTime = 0;
-					Event nextEvent;
 					try {
-						nextEvent = getNextEvent();
-						if(null != nextEvent){
-							sleepTime = nextEvent.getEventDate().getTime() - new Date().getTime();
-						} else {
-							sleepTime = 100;
-						}
+						Event nextEvent = getNextEvent();
+						if(null == nextEvent){ wait();}
+						long sleepTime = nextEvent.getEventDate().getTime() - new Date().getTime();
 						Thread.sleep(sleepTime);
+						
 						for(EventListener listener : eventlisteners){
-							listener.handleEvent(nextEvent);
+							try {
+								listener.handleEvent(nextEvent);
+							} catch (RemoteException e) {
+								System.out.println("listener konnte nicht erreicht werden");
+								e.printStackTrace();
+							}
 						}
 					} catch (InterruptedException e) {
-						e.printStackTrace();
 					}
 				}
 			}

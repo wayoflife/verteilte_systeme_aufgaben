@@ -9,5 +9,7 @@ public interface TimeService extends Remote{
 	public abstract String getDate() throws RemoteException;
 	public abstract String getTime() throws RemoteException;
 	public abstract Date getTimeAndDate() throws RemoteException;
+	public abstract void addEventListener(EventListener eventListener) throws RemoteException;
+	public abstract void removeEventListener(EventListener eventListener) throws RemoteException;
 
 }

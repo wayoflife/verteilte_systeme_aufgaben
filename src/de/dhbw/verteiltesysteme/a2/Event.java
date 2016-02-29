@@ -1,18 +1,17 @@
 package de.dhbw.verteiltesysteme.a2;
 
+import java.io.Serializable;
+import java.rmi.RemoteException;
 import java.util.Date;
 
-public class Event {
-	
+public class Event implements Serializable{
+
+	private static final long serialVersionUID = -4084919683176155680L;
 	private Date eventDate;
 	private String beschreibung;
 	
-	public Event(String beschreibung) {
-		this(new Date(), beschreibung);
-	}
-	
-	public Event(Date date, String beschreibung) {
-		setEventDate(date);
+	public Event(long timeFromNow, String beschreibung) throws RemoteException{
+		setEventDate(new Date(new Date().getTime() + timeFromNow));
 		setBeschreibung(beschreibung);
 	}
 
@@ -31,5 +30,4 @@ public class Event {
 	public void setBeschreibung(String beschreibung) {
 		this.beschreibung = beschreibung;
 	}
-
 }
