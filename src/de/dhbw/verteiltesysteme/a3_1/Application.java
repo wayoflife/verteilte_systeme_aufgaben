@@ -1,4 +1,4 @@
-package de.dhbw.verteiltesysteme.a2;
+package de.dhbw.verteiltesysteme.a3_1;
 
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
@@ -19,7 +19,7 @@ public class Application {
 		timeServiceRMI.addEvent(new Event(3000, "zweites event"));
 		timeServiceRMI.addEvent(new Event(5000, "drittes event"));
 		timeServiceRMI.addEvent(new Event(6000, "viertes event"));
-		timeServiceRMI.addEvent(new Event(8000, "fünftes event"));
+		timeServiceRMI.addEvent(new Event(38000, "fünftes event"));
 		
 		System.out.println("application wartet für 12 sekunden");
 		Thread.sleep(12000);
